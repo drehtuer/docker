@@ -30,7 +30,7 @@ services:
             placement:
                 constraints: [node.role == manager]
             restart_policy:
-                condition: none
+                condition: on-failure
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - /var/data/docker/config/traefik:/etc/traefik:ro
