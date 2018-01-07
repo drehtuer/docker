@@ -1,0 +1,72 @@
+version: '3.5'
+services:
+    bind9:
+        image: drehtuer/bind9:latest
+        deploy:
+            mode: global
+            placement:
+                constraints: [node.role == manager]
+            restart_policy:
+                condition: on-failure
+        volumes:
+            - /var/data/docker/config/bind9:/etc/named:ro
+        ports:
+            - "53:53/tcp"
+            - "53:53/udp"
+        secrets:
+            - source: bind_rndc
+              target: rndc.key
+              mode: 0444
+        networks:
+            dockernet:
+                aliases:
+                    - bind9
+    traefik:
+        image: traefik:latest
+        labels:
+            - "traefik.backend=whoami"
+        deploy:
+            mode: global
+            placement:
+                constraints: [node.role == manager]
+            restart_policy:
+                condition: none
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /var/data/docker/config/traefik:/etc/traefik:ro
+        ports:
+            - "80:80/tcp"
+            - "443:443/tcp"
+            - "8080:8080/tcp"
+        networks:
+            dockernet:
+                aliases:
+                    - traefik
+    portainer:
+        image: portainer/portainer:latest
+        deploy:
+            mode: global
+            placement:
+                constraints:
+                    [node.role == manager]
+            restart_policy:
+                condition: on-failure
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /var/data/docker/persist/portainer:/data
+        ports:
+            - "9000:9000/tcp"
+        networks:
+            dockernet:
+                aliases:
+                    - portainer
+networks:
+    dockernet:
+        driver: overlay
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.2.0.0/16
+secrets:
+    bind_rndc:
+        file: /var/data/docker/secrets/rndc.key
