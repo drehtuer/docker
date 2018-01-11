@@ -3,6 +3,8 @@ services:
     bind9:
         image: drehtuer/bind9:latest
         deploy:
+            labels:
+                - "traefik.enable=false"
             mode: global
             placement:
                 constraints: [node.role == manager]
@@ -11,21 +13,24 @@ services:
         volumes:
             - /var/data/docker/config/bind9:/etc/named:ro
         ports:
-            - "53:53/tcp"
             - "53:53/udp"
+            - "53:53/tcp"
         secrets:
             - source: bind_rndc
               target: rndc.key
               mode: 0444
         networks:
-            dockernet:
-                aliases:
-                    - bind9
+            traefik-net:
+
     traefik:
         image: traefik:latest
-        labels:
-            - "traefik.backend=whoami"
         deploy:
+            labels:
+                - "traefik.enable=true"
+                - "traefik.backend=traefik-ui"
+                - "traefik.network=rlyeh_traefik-net"
+                - "traefik.frontend.rule=Host:cloud.drehtuer.net"
+                - "traefik.port=9001"
             mode: global
             placement:
                 constraints: [node.role == manager]
@@ -34,17 +39,22 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - /var/data/docker/config/traefik:/etc/traefik:ro
+            - /var/data/docker/persist/traefik/acme.json:/data/acme.json
         ports:
             - "80:80/tcp"
             - "443:443/tcp"
-            - "8080:8080/tcp"
         networks:
-            dockernet:
-                aliases:
-                    - traefik
+            traefik-net:
+
     portainer:
         image: portainer/portainer:latest
         deploy:
+            labels:
+                - "traefik.enable=true"
+                - "traefik.backend=portainer"
+                - "traefik.network=rlyeh_traefik-net"
+                - "traefik.frontend.rule=PathPrefixStrip:/portainer/"
+                - "traefik.port=9000"
             mode: global
             placement:
                 constraints:
@@ -54,19 +64,15 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - /var/data/docker/persist/portainer:/data
-        ports:
-            - "9000:9000/tcp"
         networks:
-            dockernet:
-                aliases:
-                    - portainer
+            traefik-net:
+
 networks:
-    dockernet:
+    traefik-net:
         driver: overlay
-        ipam:
-            driver: default
-            config:
-                - subnet: 172.2.0.0/16
+        driver_opts:
+            encrypted: "true"
+
 secrets:
     bind_rndc:
         file: /var/data/docker/secrets/rndc.key
