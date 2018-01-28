@@ -9,7 +9,7 @@ LABEL 	name="bind9" \
 # apt and create required directories
 RUN 	apt-get update \
     	&& apt-get install -y \
-	    	bind9 \
+	    	bind9
     	&& rm -rf /var/lib/apt/lists/* \
         && mkdir -p /run/named \
         && chown bind:bind /run/named
@@ -17,6 +17,8 @@ RUN 	apt-get update \
 # required ports
 EXPOSE 	53/tcp \
         53/udp
+
+VOLUME  /etc/named
 
 # start application
 CMD     ["/usr/sbin/named", "-c", "/etc/named/named.conf", "-g", "-u", "bind"]

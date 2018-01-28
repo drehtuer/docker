@@ -20,12 +20,17 @@ RUN     apt-get update \
         && wget -q -O ${TS_FILE} "${TS_URL}" \
         && tar -xjf ${TS_FILE} \
         && adduser --no-create-home --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "TeamSpeak,,," teamspeak \
-        && chown -R teamspeak ${TS_DIR}
+        && chown -R teamspeak /${TS_DIR}
 
 EXPOSE  9987/udp
 EXPOSE  30033/tcp
 EXPOSE  10011/tcp
 
+VOLUME  /${TS_DIR}/ts3server.sqlitedb
+VOLUME  /${TS_DIR}/ts3server.ini
+VOLUME  /${TS_DIR}/files
+VOLUME  /${TS_DIR}/logs
+
 USER    teamspeak
 
-ENTRYPOINT  ["${TS_DIR}/ts3server_minimal_runscript.sh"]
+ENTRYPOINT  ["/${TS_DIR}/ts3server_minimal_runscript.sh"]
