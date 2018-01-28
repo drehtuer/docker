@@ -33,4 +33,4 @@ VOLUME  /${TS_DIR}/logs
 
 USER    teamspeak
 
-ENTRYPOINT  ["/${TS_DIR}/ts3server_minimal_runscript.sh"]
+ENTRYPOINT  ["sh", "/teamspeak3-server_linux_amd64/ts3server_minimal_runscript.sh"]
