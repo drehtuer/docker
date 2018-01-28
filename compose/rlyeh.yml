@@ -145,14 +145,16 @@ services:
                 constraints: [node.role == manager]
             restart_policy:
                 condition: on-failure
-        command: sh -c "sh"
+        command: sh -c "top"
         volumes:
             - /var/data/docker/config/teamspeak/ts3server.sqlitedb:/teamspeak3-server_linux_amd64/ts3server.sqlitedb:rw
             - /var/data/docker/config/teamspeak/ts3server.ini:/teamspeak3-server_linux_amd64/ts3server.ini:ro
+            - /var/data/docker/config/teamspeak/files:/teamspeak3-server_linux_amd64/files:rw
+            - /var/data/docker/config/teamspeak/logs:/teamspeak3-server_linux_amd64/logs:rw
         ports:
-            - "9987/udp"
-            - "30033/tcp"
-            - "10011/tcp"
+            - "9987:9987/udp"
+            - "3033:30033/tcp"
+            - "10011:10011/tcp"
         networks:
             net_external:
                 aliases:
