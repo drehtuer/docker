@@ -15,13 +15,13 @@ RUN     apt-get update \
             bzip2 \
             tar \
             wget \
-            libmariadb2 \
         && rm -rf /var/lib/apt/lists/* \
         && wget -q -O /${TS_FILE} "${TS_URL}" \
         && tar -xjf /${TS_FILE} \
         && rm ${TS_FILE} \
         && adduser --no-create-home --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "TeamSpeak,,," teamspeak \
-        && chown -R teamspeak /${TS_DIR}
+        && chown -R teamspeak /${TS_DIR} \
+        && mv /teamspeak3-server_linux_amd64/redist/* /teamspeak3-server_linux_amd64/
 
 EXPOSE  9987/udp \
         30033/tcp \
