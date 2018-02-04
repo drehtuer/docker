@@ -1,4 +1,4 @@
-FROM    debian-slim:stable
+FROM    debian:stable-slim
 
 LABEL   name="teamspeak" \
         description="Teamspeak Server" \
