@@ -146,10 +146,10 @@ services:
             restart_policy:
                 condition: on-failure
         volumes:
-            - /var/data/docker/config/teamspeak/ts3server.sqlitedb:/teamspeak3-server_linux_amd64/ts3server.sqlitedb:rw
             - /var/data/docker/config/teamspeak/ts3server.ini:/teamspeak3-server_linux_amd64/ts3server.ini:ro
-            - /var/data/docker/config/teamspeak/files:/teamspeak3-server_linux_amd64/files:rw
-            - /var/data/docker/config/teamspeak/logs:/teamspeak3-server_linux_amd64/logs:rw
+            - /var/data/docker/config/teamspeak/ts3db_mariadb.ini:/teamspeak3-server_linux_amd64/ts3db_mariadb.ini:ro
+            - /var/data/docker/persist/teamspeak/files:/teamspeak3-server_linux_amd64/files:rw
+            - /var/data/docker/persist/teamspeak/logs:/teamspeak3-server_linux_amd64/logs:rw
         ports:
             - "9987:9987/udp"
             - "3033:30033/tcp"
@@ -158,6 +158,34 @@ services:
             net_external:
                 aliases:
                     - external_teamspeak
+            net_internal:
+                aliases:
+                    - internal_teamspeak
+
+    mariadb:
+        image: mariadb:latest
+        deploy:
+            labels:
+                - "traefik.enable=false"
+            mode: global
+            placement:
+                constraints: [node.role == manager]
+            restart_policy:
+                condition: on-failure
+        environment:
+            - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mariadb.passwd
+        secrets:
+            - source: mariadb_root_passwd
+              target: mariadb.passwd
+              mode: 0444
+        volumes:
+            - /var/data/docker/config/mariadb/conf.d:/etc/mysql/conf.d:ro
+            - /var/data/docker/persist/mariadb:/var/lib/mysql:rw
+        networks:
+            net_internal:
+                aliases:
+                    - internal_mariadb
+
 networks:
     net_external:
         driver: overlay
@@ -177,3 +205,5 @@ networks:
 secrets:
     bind_rndc:
         file: /var/data/docker/secrets/rndc.key
+    mariadb_root_passwd:
+        file: /var/data/docker/secrets/mariadb.key
