@@ -35,4 +35,4 @@ USER    teamspeak
 
 WORKDIR /teamspeak3-server_linux_amd64
 
-ENTRYPOINT  ["./ts3server_minimal_runscript.sh", "inifile=ts3server.ini"]
+ENTRYPOINT  ["LD_LIBRARY_PATH=\".:${LD_LIBRARY_PATH}\"", "./ts3server", "inifile=ts3server.ini"]
