@@ -15,6 +15,7 @@ RUN     apt-get update \
             bzip2 \
             tar \
             wget \
+            libmariadb2 \
         && rm -rf /var/lib/apt/lists/* \
         && wget -q -O /${TS_FILE} "${TS_URL}" \
         && tar -xjf /${TS_FILE} \
