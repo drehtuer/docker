@@ -32,4 +32,6 @@ VOLUME  /${TS_DIR}/ts3server.ini \
 
 USER    teamspeak
 
-ENTRYPOINT  ["sh", "/teamspeak3-server_linux_amd64/ts3server_minimal_runscript.sh", "inifile=/teamspeak3-server_linux_amd64/ts3server.ini"]
+WORKDIR /teamspeak3-server_linux_amd64
+
+ENTRYPOINT  ["sh", "ts3server_minimal_runscript.sh", "inifile=ts3server.ini"]
