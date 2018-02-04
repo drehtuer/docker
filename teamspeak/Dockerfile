@@ -35,4 +35,6 @@ USER    teamspeak
 
 WORKDIR /teamspeak3-server_linux_amd64
 
-ENTRYPOINT  ["LD_LIBRARY_PATH=\".:${LD_LIBRARY_PATH}\"", "./ts3server", "inifile=ts3server.ini"]
+ENV     LD_LIBRARY_PATH="/teamspeak3-server_linux_amd64:${LD_LIBRARY_PATH}"
+
+ENTRYPOINT  ["./ts3server", "inifile=ts3server.ini"]
