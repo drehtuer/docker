@@ -20,9 +20,9 @@ services:
               target: rndc.key
               mode: 0444
         networks:
-            net_external:
+            net_internal:
                 aliases:
-                    - external_bind9
+                    - internal_bind9
 
     traefik:
         image: traefik:latest
@@ -154,10 +154,8 @@ services:
             - "9987:9987/udp"
             - "3033:30033/tcp"
             - "10011:10011/tcp"
+        command: top
         networks:
-            net_external:
-                aliases:
-                    - external_teamspeak
             net_internal:
                 aliases:
                     - internal_teamspeak
@@ -186,12 +184,57 @@ services:
                 aliases:
                     - internal_mariadb
 
-networks:
-    net_external:
-        driver: overlay
-        driver_opts:
-            encrypted: "true"
+    chrony:
+        image: drehtuer/chrony:latest
+        deploy:
+            labels:
+                - "traefik.enable=false"
+            mode: global
+            restart_policy:
+                condition: on-failure
+        volumes:
+            - /var/data/docker/config/chrony:/etc/chrony:ro
 
+    postfix:
+        image: drehtuer/postfix:latest
+        deploy:
+            labels:
+                - "traefik.enable=false"
+            mode: global
+            placement:
+                constraints: [node.role == manager]
+            restart_policy:
+                condition: on-failure
+        volumes:
+            - /var/data/docker/postfix:/etc/postfix:ro
+        ports:
+            - "25:25/tcp"
+            - "587:587/tcp"
+        networks:
+            net_internal:
+                aliases:
+                    - internal_postfix
+
+    dovecot:
+        image: drehtuer/dovecot:latest
+        deploy:
+            labels:
+                - "traefik.enable=false"
+            mode: global
+            placement:
+                constraints: [node.role == manager]
+            restart_policy:
+                condition: on-failure
+        volumes:
+            - /var/data/docker/dovecot:/etc/dovecot:ro
+        ports:
+            - "993:993/tcp"
+        networks:
+            net_internal:
+                aliases:
+                    - internal_dovecot
+
+networks:
     net_traefik:
         driver: overlay
         driver_opts:
