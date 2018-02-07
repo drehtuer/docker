@@ -154,7 +154,6 @@ services:
             - "9987:9987/udp"
             - "3033:30033/tcp"
             - "10011:10011/tcp"
-        command: top
         networks:
             net_internal:
                 aliases:
@@ -194,6 +193,7 @@ services:
                 condition: on-failure
         volumes:
             - /var/data/docker/config/chrony:/etc/chrony:ro
+            - /var/data/docker/persist/chrony:/var/lib/chrony:rw
 
     postfix:
         image: drehtuer/postfix:latest
