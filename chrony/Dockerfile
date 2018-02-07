@@ -8,10 +8,9 @@ LABEL   name="chrony" \
 RUN     apt-get update \
         && apt-get install -y \
             chrony \
-        && rm -rf /var/lib/apt/lists/* \
-        && adduser --no-create-home --shell /usr/bin/nologin --disable-password --disable-login --gecos "chrony,,," chrony
+        && rm -rf /var/lib/apt/lists/*
 
 VOLUME  /etc/chrony \
         /var/lib/chrony
 
-ENTRYPOINT  ["chronyd", "-f", "/etc/chrony/chrony.conf", "-d", "-u", "chrony"]
+ENTRYPOINT  ["chronyd", "-f", "/etc/chrony/chrony.conf", "-d", "-u", "_chrony"]
