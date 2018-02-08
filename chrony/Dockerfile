@@ -13,4 +13,4 @@ RUN     apt-get update \
 VOLUME  /etc/chrony \
         /var/lib/chrony
 
-ENTRYPOINT  ["chronyd", "-f", "/etc/chrony/chrony.conf", "-d", "-u", "_chrony"]
+ENTRYPOINT  ["chronyd", "-f", "/etc/chrony/chrony.conf", "-d"]
