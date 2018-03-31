@@ -11,6 +11,10 @@ RUN     apt-get update \
             dovecot-imapd \
             dovecot-mysql \
             dovecot-antispam \
+            dovecot-sieve \
+            dovecot-managesieved \
+            dovecot-lmtpd \
+            dovecot-solr \
         && rm -Rf /var/lib/apt/list/*
 
 EXPOSE  993/tcp

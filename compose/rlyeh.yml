@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.5"
 services:
     bind9:
         image: drehtuer/bind9:latest
@@ -20,9 +20,9 @@ services:
               target: rndc.key
               mode: 0444
         networks:
-            net_internal:
+            net_swarm:
                 aliases:
-                    - internal_bind9
+                    - swarm_bind9
 
     traefik:
         image: traefik:latest
@@ -42,9 +42,9 @@ services:
             - "80:80/tcp"
             - "443:443/tcp"
         networks:
-            net_traefik:
+            net_swarm:
                 aliases:
-                    - traefik_traefik
+                    - swarm_traefik
 
     nginx:
         image: nginx:latest
@@ -53,7 +53,7 @@ services:
                 - "traefik.enable=true"
                 - "traefik.port=80"
                 - "traefik.backend=nginx"
-                - "traefik.docker.network=rlyeh_net_traefik"
+                - "traefik.docker.network=rlyeh_net_swarm"
                 - "traefik.frontend.rule=Host:www.drehtuer.net,drehtuer.net"
                 - "traefik.frontend.priority=5"
             mode: replicated
@@ -64,9 +64,9 @@ services:
             - /var/data/docker/config/nginx:/etc/nginx:ro
             - /var/data/docker/static/srv/www:/srv/www:ro
         networks:
-            net_traefik:
+            net_swarm:
                 aliases:
-                    - traefik_nginx
+                    - swarm_nginx
 
     portainer:
         image: portainer/portainer:latest
@@ -75,7 +75,7 @@ services:
                 - "traefik.enable=true"
                 - "traefik.port=9000"
                 - "traefik.backend=portainer"
-                - "traefik.docker.network=rlyeh_net_traefik"
+                - "traefik.docker.network=rlyeh_net_swarm"
                 - "traefik.frontend.rule=PathPrefixStrip:/portainer"
                 - "traefik.frontend.priority=10"
             mode: global
@@ -88,9 +88,9 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
             - /var/data/docker/persist/portainer:/data
         networks:
-            net_traefik:
+            net_swarm:
                 aliases:
-                    - traefik_portainer
+                    - swarm_portainer
 
     redis:
         image: redis:latest
@@ -107,9 +107,9 @@ services:
             - /var/data/docker/persist/redis:/data:rw
         command: redis-server --appendonly yes
         networks:
-            net_internal:
+            net_swarm:
                 aliases:
-                    - internal_redis
+                    - swarm_redis
 
     ethercalc:
         image: audreyt/ethercalc:latest
@@ -120,20 +120,17 @@ services:
                 - "traefik.enable=true"
                 - "traefik.port=8000"
                 - "traefik.backend=ethercalc"
-                - "traefik.docker.network=rlyeh_net_traefik"
+                - "traefik.docker.network=rlyeh_net_swarm"
                 - "traefik.frontend.rule=PathPrefixStrip:/ethercalc"
                 - "traefik.frontend.priority=10"
             mode: global
             restart_policy:
                 condition: on-failure
-        command: sh -c "REDIS_HOST=internal_redis REDIS_PORT=6379 pm2 start `which ethercalc` -x -- --expire 7776000 --basepath /ethercalc && pm2 logs"
+        command: sh -c "REDIS_HOST=swarm_redis REDIS_PORT=6379 pm2 start `which ethercalc` -x -- --expire 7776000 --basepath /ethercalc && pm2 logs"
         networks:
-            net_internal:
+            net_swarm:
                 aliases:
-                    - internal_ethercalc
-            net_traefik:
-                aliases:
-                    - traefik_ethercalc
+                    - swarm_ethercalc
 
     teamspeak:
         image: drehtuer/teamspeak:latest
@@ -152,12 +149,12 @@ services:
             - /var/data/docker/persist/teamspeak/logs:/teamspeak3-server_linux_amd64/logs:rw
         ports:
             - "9987:9987/udp"
-            - "3033:30033/tcp"
+            - "30033:30033/tcp"
             - "10011:10011/tcp"
         networks:
-            net_internal:
+            net_swarm:
                 aliases:
-                    - internal_teamspeak
+                    - swarm_teamspeak
 
     mariadb:
         image: mariadb:latest
@@ -179,68 +176,51 @@ services:
             - /var/data/docker/config/mariadb/conf.d:/etc/mysql/conf.d:ro
             - /var/data/docker/persist/mariadb:/var/lib/mysql:rw
         networks:
-            net_internal:
+            net_swarm:
                 aliases:
-                    - internal_mariadb
+                    - swarm_mariadb
 
-    chrony:
-        image: drehtuer/chrony:latest
-        deploy:
-            labels:
-                - "traefik.enable=false"
-            mode: global
-            restart_policy:
-                condition: on-failure
-        volumes:
-            - /var/data/docker/config/chrony:/etc/chrony:ro
-            - /var/data/docker/persist/chrony:/var/lib/chrony:rw
+#    postfix:
+#        image: drehtuer/postfix:latest
+#        deploy:
+#            labels:
+#                - "traefik.enable=false"
+#            mode: global
+#            placement:
+#                constraints: [node.role == manager]
+#            restart_policy:
+#                condition: on-failure
+#        volumes:
+#            - /var/data/docker/postfix:/etc/postfix:ro
+#        ports:
+#            - "25:25/tcp"
+#            - "587:587/tcp"
+#        networks:
+#            net_swarm:
+#                aliases:
+#                    - swarm_postfix
 
-    postfix:
-        image: drehtuer/postfix:latest
-        deploy:
-            labels:
-                - "traefik.enable=false"
-            mode: global
-            placement:
-                constraints: [node.role == manager]
-            restart_policy:
-                condition: on-failure
-        volumes:
-            - /var/data/docker/postfix:/etc/postfix:ro
-        ports:
-            - "25:25/tcp"
-            - "587:587/tcp"
-        networks:
-            net_internal:
-                aliases:
-                    - internal_postfix
-
-    dovecot:
-        image: drehtuer/dovecot:latest
-        deploy:
-            labels:
-                - "traefik.enable=false"
-            mode: global
-            placement:
-                constraints: [node.role == manager]
-            restart_policy:
-                condition: on-failure
-        volumes:
-            - /var/data/docker/dovecot:/etc/dovecot:ro
-        ports:
-            - "993:993/tcp"
-        networks:
-            net_internal:
-                aliases:
-                    - internal_dovecot
+#    dovecot:
+#        image: drehtuer/dovecot:latest
+#        deploy:
+#            labels:
+#                - "traefik.enable=false"
+#            mode: global
+#            placement:
+#                constraints: [node.role == manager]
+#            restart_policy:
+#                condition: on-failure
+#        volumes:
+#            - /var/data/docker/dovecot:/etc/dovecot:ro
+#        ports:
+#            - "993:993/tcp"
+#        networks:
+#            net_swarm:
+#                aliases:
+#                    - swarm_dovecot
 
 networks:
-    net_traefik:
-        driver: overlay
-        driver_opts:
-            encrypted: "true"
-
-    net_internal:
+    net_swarm:
         driver: overlay
         driver_opts:
             encrypted: "true"
