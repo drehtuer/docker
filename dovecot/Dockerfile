@@ -21,4 +21,4 @@ EXPOSE  993/tcp
 
 VOLUME  /etc/dovecot
 
-ENTRYPOINT  ["top"]
+ENTRYPOINT ["/usr/sbin/dovecot", "-F"]
