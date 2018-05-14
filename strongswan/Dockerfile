@@ -16,10 +16,10 @@ RUN         apt-get update \
 EXPOSE      4500/udp \
             500/udp
 
-VOLUME      /etc/ipsec.conf \
-            /etc/ipsec.secrets \
-            /etc/strongswan.conf \
-            /etc/ipsec.d/firewall.updown
+#VOLUME      /etc/ipsec.conf \
+#            /etc/ipsec.secrets \
+#            /etc/strongswan.conf \
+#            /etc/ipsec.d/firewall.updown
 
 ENTRYPOINT  ["/usr/sbin/ipsec"]
 CMD ["start", "--nofork"]
