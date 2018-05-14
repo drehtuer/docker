@@ -7,7 +7,7 @@ LABEL       name="StrongSwan" \
 
 RUN         apt-get update \
             && apt-get install -y \
-                ip6tables \
+                iptables \
                 strongswan-charon \
                 strongswan-starter \
                 libstrongswan-standard-plugins \
