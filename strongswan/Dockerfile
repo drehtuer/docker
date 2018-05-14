@@ -10,6 +10,7 @@ RUN         apt-get update \
                 iptables \
                 strongswan-charon \
                 strongswan-starter \
+                strongswan-pki \
                 libstrongswan-standard-plugins \
             && rm -rf /var/lib/apt/lists/*
 
