@@ -1,8 +1,8 @@
 FROM        debian:stable-slim
 
-LABEL       name="StrongSwan"
-            description="StrongSwan VPN"
-            version="1.0"
+LABEL       name="StrongSwan" \
+            description="StrongSwan VPN" \
+            version="1.0" \
             maintainer="drehtuer@drehtuer.net"
 
 RUN         apt-get update \
