@@ -1,6 +1,6 @@
 FROM        debian:stable-slim
 
-LABEL       name="StrongSwan" \
+LABEL       name="strongswan" \
             description="StrongSwan VPN" \
             version="1.0" \
             maintainer="drehtuer@drehtuer.net"
