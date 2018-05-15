@@ -12,6 +12,7 @@ RUN         apt-get update \
                 strongswan-starter \
                 strongswan-pki \
                 libstrongswan-standard-plugins \
+                libstrongswan-extra-plugins \
             && rm -rf /var/lib/apt/lists/*
 
 EXPOSE      4500/udp \
