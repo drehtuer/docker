@@ -5,26 +5,35 @@ LABEL   name="7d2d" \
         version="1.0" \
         maintainer="drehtuer@drehtuer.net"
 
-ENV     STEAMCMD_PATH="/opt/steamcmd"
-        STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz"
-        STEAM_APP_ID="294420"
-        7D2D_PATH="/opt/7d2d"
-        7D2D_CONFIG="server_data/serverconfig.xml"
+ENV     STEAMCMD_PATH="/opt/steamcmd" \
+        STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
+        STEAM_APP_ID="294420" \
+        SDTD_PATH="/opt/sdtd" \
+        SDTD_USER="sdtd" \
+        SDTD_CONFIG="serverconfig.xml"
 
-RUN     apt-get update \
+RUN     dpkg --add-architecture i386 \
+        && apt-get update \
         && apt-get install -y \
             curl \
+            lib32stdc++6 \
             lib32gcc1 \
+            libglu1 \
+            libxcursor1 \
+            libxrandr2 \
         && rm -rf /var/lib/apt/lists/* \
-        && adduser --no-create-home --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "7d2d,,," 7d2d \
+        && echo "System update done, installing steamcmd ..." \
         && mkdir -p ${STEAMCMD_PATH} \
-        && mkdir -p ${7D2D_PATH} \
         && cd ${STEAMCMD_PATH} \
-        && curl -sqL ${STEAMCMD_URL} | tar zxf - \
-        && ./steamcmd +login anonymous +force_install_dir ${7D2D_PATH} +app_update ${STEAM_APP_ID} +quit \
-        && cd ${7D2D_PATH} \
-        && ./update_check.sh \
-        && chown -R 7d2d ${7D2D_PATH}
+        && curl -sqL "${STEAMCMD_URL}" | tar zxf - \
+        && ulimit -n 2048 \
+        && echo "Installing 7DayToDie ..." \
+        && mkdir -p ${SDTD_PATH} \
+        && ./steamcmd.sh +login anonymous +force_install_dir ${SDTD_PATH} +app_update ${STEAM_APP_ID} validate +quit \
+        && cd ${SDTD_PATH} \
+        && adduser --no-create-home --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "sdtd,,," ${SDTD_USER} \
+        && chown -R ${SDTD_USER} ${SDTD_PATH} \
+        && echo "Done"
 
 EXPOSE  26900/tcp \
         8082\tcp \
@@ -32,10 +41,10 @@ EXPOSE  26900/tcp \
         26901/udp \
         26902/udp
 
-VOLUME  ${7D2D_PATH}/${7D2D_CONFIG}
+#VOLUME  ${SDTD_PATH}/${SDTD_CONFIG}
 
-USER    7d2d
+USER    ${SDTD_USER}
 
-WORKDIR ${7D2D_PATH}
+WORKDIR ${SDTD_PATH}
 
-ENTRYPOINT ["./7DaysToDieServer.x86_64", "-configfile=${7D2D_CONFIG}", "-logfile", "/dev/stdout", "-quit", "-batchmode", "-nographics", "-dedicated"]
+ENTRYPOINT ["./7DaysToDieServer.x86_64", "-configfile=${SDTD_CONFIG}", "-logfile", "/dev/stdout", "-quit", "-batchmode", "-nographics", "-dedicated"]
