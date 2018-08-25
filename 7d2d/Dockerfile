@@ -36,7 +36,7 @@ RUN     dpkg --add-architecture i386 \
         && echo "Done"
 
 EXPOSE  26900/tcp \
-        8082\tcp \
+        8082/tcp \
         26900/udp \
         26901/udp \
         26902/udp
