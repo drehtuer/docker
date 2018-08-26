@@ -22,6 +22,7 @@ RUN     dpkg --add-architecture i386 \
             libglu1 \
             libxcursor1 \
             libxrandr2 \
+            telnet \
         && rm -rf /var/lib/apt/lists/* \
         && echo "System update done, installing steamcmd ..." \
         && mkdir -p ${STEAMCMD_PATH} \
