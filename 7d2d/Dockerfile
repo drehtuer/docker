@@ -10,7 +10,10 @@ ENV     STEAMCMD_PATH="/opt/steamcmd" \
         STEAM_APP_ID="294420" \
         SDTD_PATH="/opt/sdtd" \
         SDTD_USER="sdtd" \
-        SDTD_CONFIG="serverconfig.xml"
+        SDTD_CONFIG="serverconfig.xml" \
+        SDTD_ADMIN="serveradmin.xml" \
+        SDTD_WORLD="Data" \
+        SERVER_FIXES_URL="http://illy.bz/fi/7dtd/server_fixes.tar.gz"
 
 RUN     dpkg --add-architecture i386 \
         && apt-get update \
@@ -31,7 +34,9 @@ RUN     dpkg --add-architecture i386 \
         && mkdir -p ${SDTD_PATH} \
         && ./steamcmd.sh +login anonymous +force_install_dir ${SDTD_PATH} +app_update ${STEAM_APP_ID} validate +quit \
         && cd ${SDTD_PATH} \
-        && adduser --no-create-home --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "sdtd,,," ${SDTD_USER} \
+        && echo "Installing server fixes ..." \
+        && curl -sqL "${SERVER_FIXES_URL}" | tar zxf - \
+        && adduser --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "sdtd,,," ${SDTD_USER} \
         && chown -R ${SDTD_USER} ${SDTD_PATH} \
         && echo "Done"
 
@@ -41,10 +46,12 @@ EXPOSE  26900/tcp \
         26901/udp \
         26902/udp
 
-#VOLUME  ${SDTD_PATH}/${SDTD_CONFIG}
+VOLUME  ${SDTD_PATH}/${SDTD_CONFIG} \
+        ${SDTD_PATH}/${SDTD_SERVERADMIN} \
+        ${SDTD_PATH}/${SDTD_WORLD}
 
 USER    ${SDTD_USER}
 
 WORKDIR ${SDTD_PATH}
 
-ENTRYPOINT ["./7DaysToDieServer.x86_64", "-configfile=${SDTD_CONFIG}", "-logfile", "/dev/stdout", "-quit", "-batchmode", "-nographics", "-dedicated"]
+ENTRYPOINT ./7DaysToDieServer.x86_64 configfile=${SDTD_CONFIG} -logfile /dev/stdout -quit -batchmode -nographics -dedicated
