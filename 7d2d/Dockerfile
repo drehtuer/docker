@@ -36,6 +36,7 @@ RUN     dpkg --add-architecture i386 \
         && echo "Installing server fixes ..." \
         && curl -sqL "${SERVER_FIXES_URL}" | tar zxf - \
         && adduser --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "sdtd,,," ${SDTD_USER} \
+        && touch ${SDTD_LOG}
         && chown -R ${SDTD_USER} ${SDTD_PATH} \
         && echo "Done"
 
