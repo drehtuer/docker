@@ -11,7 +11,6 @@ ENV     STEAMCMD_PATH="/opt/steamcmd" \
         SDTD_PATH="/opt/sdtd" \
         SDTD_USER="sdtd" \
         SDTD_CONFIG="serverconfig.xml" \
-        SDTD_LOG="${SDTD_PATH}/sdtd.log" \
         SERVER_FIXES_URL="http://illy.bz/fi/7dtd/server_fixes.tar.gz"
 
 RUN     dpkg --add-architecture i386 \
@@ -35,7 +34,6 @@ RUN     dpkg --add-architecture i386 \
         && cd ${SDTD_PATH} \
         && echo "Installing server fixes ..." \
         && curl -sqL "${SERVER_FIXES_URL}" | tar zxf - \
-        && touch ${SDTD_LOG} \
         && adduser --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "sdtd,,," ${SDTD_USER} \
         && chown -R ${SDTD_USER} ${SDTD_PATH} \
         && echo "Done"
@@ -52,4 +50,4 @@ USER    ${SDTD_USER}
 
 WORKDIR ${SDTD_PATH}
 
-ENTRYPOINT /opt/startServer.sh ${SDTD_CONFIG} ${SDTD_LOG}
+ENTRYPOINT ["/opt/startServer.sh"]

@@ -1,7 +1,6 @@
-#!/bin/sh
-
+#!/usr/bin/env bash
 BIN="7DaysToDieServer.x86_64"
 
-./${BIN} configfile=${1} -logfile ${2} -quit -batchmode -nographics -dedicated &
-
-tail -f ${2}
+./${BIN} configfile=${SDTD_CONFIG} -logfile /dev/stdout -quit -batchmode -nographics -dedicated &
+PID=$!
+wait "${PID}"
