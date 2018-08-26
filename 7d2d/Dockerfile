@@ -40,6 +40,8 @@ RUN     dpkg --add-architecture i386 \
         && chown -R ${SDTD_USER} ${SDTD_PATH} \
         && echo "Done"
 
+ADD     startServer.sh /opt/startServer.sh
+
 EXPOSE  26900/tcp \
         8082/tcp \
         26900/udp \
@@ -50,4 +52,4 @@ USER    ${SDTD_USER}
 
 WORKDIR ${SDTD_PATH}
 
-ENTRYPOINT ./startServer.sh ${SDTD_CONFIG} ${SDTD_LOG}
+ENTRYPOINT /opt/startServer.sh ${SDTD_CONFIG} ${SDTD_LOG}
