@@ -11,8 +11,7 @@ ENV     STEAMCMD_PATH="/opt/steamcmd" \
         SDTD_PATH="/opt/sdtd" \
         SDTD_USER="sdtd" \
         SDTD_CONFIG="serverconfig.xml" \
-        SDTD_ADMIN="serveradmin.xml" \
-        SDTD_WORLD="Data" \
+        SDTD_LOG="${SDTD_PATH}/sdtd.log" \
         SERVER_FIXES_URL="http://illy.bz/fi/7dtd/server_fixes.tar.gz"
 
 RUN     dpkg --add-architecture i386 \
@@ -50,4 +49,4 @@ USER    ${SDTD_USER}
 
 WORKDIR ${SDTD_PATH}
 
-ENTRYPOINT ./7DaysToDieServer.x86_64 configfile=${SDTD_CONFIG} -logfile /dev/stdout -quit -batchmode -nographics -dedicated
+ENTRYPOINT ./7DaysToDieServer.x86_64 configfile=${SDTD_CONFIG} -logfile ${SDTD_LOG} -quit -batchmode -nographics -dedicated && tail -f ${SDTD_LOG}
