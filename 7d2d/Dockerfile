@@ -46,10 +46,6 @@ EXPOSE  26900/tcp \
         26901/udp \
         26902/udp
 
-VOLUME  ${SDTD_PATH}/${SDTD_CONFIG} \
-        ${SDTD_PATH}/${SDTD_SERVERADMIN} \
-        ${SDTD_PATH}/${SDTD_WORLD}
-
 USER    ${SDTD_USER}
 
 WORKDIR ${SDTD_PATH}
