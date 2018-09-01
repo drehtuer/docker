@@ -7,7 +7,9 @@ LABEL   name="7d2d" \
 
 ENV     SDTD_BOOTSTRAP_URL="http://illy.bz/fi/7dtd/bootstrap.sh" \
         SDTD_BOOTSTRAP_BIN="/usr/bin/7dtd_bootstrap.sh" \
-        SDTD_LOG="/var/log/7dtd.log"
+        SDTD_LOG="/var/log/7dtd.log" \
+        SDTD_USR="sdtd" \
+        SDTD_GRP="sdtd"
 
 # Fixes apt-get warnings
 ARG DEBIAN_FRONTEND=noninteractive
@@ -34,7 +36,8 @@ RUN     dpkg --add-architecture i386 \
         && chmod +x ${SDTD_BOOTSTRAP_BIN} \
         && touch ${SDTD_LOG} \
         && chmod 666 ${SDTD_LOG} \
-        && adduser --disabled-login --disabled-password --gecos "sdtd,,," --uid 999 --gid 999 --group
+        && addgroup --gid 999 ${SDTD_GRP} \
+        && adduser --disabled-login --disabled-password --gecos "sdtd,,," --uid 999 --gid 999 ${SDTD_USR}
 
 EXPOSE  8082/tcp \
         26900/tcp \
