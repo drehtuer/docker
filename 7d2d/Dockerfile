@@ -15,7 +15,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Install dependencies
 RUN     dpkg --add-architecture i386 \
         && apt-get update \
-	    && apt-get install -y --no-install-recommends \
+	    && apt-get install -y \
+            procps \
             gcc \
             make \
             curl \
@@ -41,11 +42,11 @@ EXPOSE  8082/tcp \
         26902/udp \
         26903/udp
 
-VOLUME  /etc/7dtd.conf \
-        /etc/init.d/7dtd.sh \
-        /etc/bash_completion.d/7dtd \
-        /home/sdtd \
-        /usr/local/bin/7dtd.sh \
-        /usr/local/lib/7dtd
+#VOLUME  /etc/7dtd.conf \
+#        /etc/init.d/7dtd.sh \
+#        /etc/bash_completion.d/7dtd \
+#        /home/sdtd \
+#        /usr/local/bin/7dtd.sh \
+#        /usr/local/lib/7dtd
         
 ENTRYPOINT  tail -f ${SDTD_LOG}
