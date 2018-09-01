@@ -33,7 +33,8 @@ RUN     dpkg --add-architecture i386 \
         && curl "${SDTD_BOOTSTRAP_URL}" -o ${SDTD_BOOTSTRAP_BIN} \
         && chmod +x ${SDTD_BOOTSTRAP_BIN} \
         && touch ${SDTD_LOG} \
-        && chmod 666 ${SDTD_LOG}
+        && chmod 666 ${SDTD_LOG} \
+        && adduser --disabled-login --disabled-password --gecos "sdtd,,," --uid 999 --gid 999 --group
 
 EXPOSE  8082/tcp \
         26900/tcp \
@@ -42,11 +43,4 @@ EXPOSE  8082/tcp \
         26902/udp \
         26903/udp
 
-#VOLUME  /etc/7dtd.conf \
-#        /etc/init.d/7dtd.sh \
-#        /etc/bash_completion.d/7dtd \
-#        /home/sdtd \
-#        /usr/local/bin/7dtd.sh \
-#        /usr/local/lib/7dtd
-        
 ENTRYPOINT  tail -f ${SDTD_LOG}
