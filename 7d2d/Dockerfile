@@ -14,7 +14,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
 RUN     dpkg --add-architecture i386 \
-        && apt-update \
+        && apt-get update \
 	    && apt-get install -y --no-install-recommends \
             gcc \
             make \
