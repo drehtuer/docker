@@ -7,7 +7,7 @@ LABEL   name="7d2d" \
 
 ENV     SDTD_BOOTSTRAP_URL="http://illy.bz/fi/7dtd/bootstrap.sh" \
         SDTD_BOOTSTRAP_BIN="/usr/bin/7dtd_bootstrap.sh" \
-        SDTD_LOG="/var/log/7d2d.log"
+        SDTD_LOG="/var/log/7dtd.log"
 
 # Fixes apt-get warnings
 ARG DEBIAN_FRONTEND=noninteractive
@@ -43,9 +43,9 @@ EXPOSE  8082/tcp \
 
 VOLUME  /etc/7dtd.conf \
         /etc/init.d/7dtd.sh \
-        /etc/bash_completion.d/7d2d \
+        /etc/bash_completion.d/7dtd \
         /home/sdtd \
         /usr/local/bin/7dtd.sh \
         /usr/local/lib/7dtd
         
-ENTRYPOINT [ "tail", "-f", "${SDTD_LOG}" ]
+ENTRYPOINT  tail -f ${SDTD_LOG}
