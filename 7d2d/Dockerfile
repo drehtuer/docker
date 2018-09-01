@@ -7,7 +7,7 @@ LABEL   name="7d2d" \
 
 ENV     SDTD_BOOTSTRAP_URL="http://illy.bz/fi/7dtd/bootstrap.sh" \
         SDTD_BOOTSTRAP_BIN="/usr/bin/7dtd_bootstrap.sh" \
-        SDTD_LOG="$/var/log/7d2d.log"
+        SDTD_LOG="/var/log/7d2d.log"
 
 # Fixes apt-get warnings
 ARG DEBIAN_FRONTEND=noninteractive
