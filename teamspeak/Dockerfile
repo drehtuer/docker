@@ -37,7 +37,8 @@ VOLUME  /${TS_DIR}/ts3server.ini \
 
 USER    teamspeak
 
-ENV     LD_LIBRARY_PATH="/${TS_DIR}:${LD_LIBRARY_PATH}"
 ENV     LANG="en_US.UTF-8"
 
-ENTRYPOINT  /${TS_DIR}/ts3server inifile=ts3server.ini license_accepted=1
+WORKDIR /${TS_DIR}
+
+ENTRYPOINT  LD_LIBRARY_PATH=".:${LD_LIBRARY_PATH}" ./ts3server inifile=ts3server.ini license_accepted=1
