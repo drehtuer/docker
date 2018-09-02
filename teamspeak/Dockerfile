@@ -16,7 +16,7 @@ RUN     apt-get update \
             bzip2 \
             tar \
             wget \
-            locale \
+            locales \
         && rm -rf /var/lib/apt/lists/* \
         && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
         && dpkg-reconfigure --frontend=noninteractive locales \
