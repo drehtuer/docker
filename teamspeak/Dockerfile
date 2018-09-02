@@ -24,7 +24,7 @@ RUN     apt-get update \
         && wget -q -O /${TS_FILE} "${TS_URL}" \
         && tar -xjf /${TS_FILE} \
         && rm ${TS_FILE} \
-        && adduser --no-create-home --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "TeamSpeak,,," ${TS_USER} \
+        && adduser --no-create-home --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "TeamSpeak,,," --uid 999 ${TS_USER} \
         && chown -R ${TS_USER} /${TS_DIR}
 
 EXPOSE  9987/udp \
@@ -37,9 +37,7 @@ VOLUME  /${TS_DIR}/ts3server.ini \
 
 USER    teamspeak
 
-ENV     LD_LIBRARY_PATH="/teamspeak3-server_linux_amd64:${LD_LIBRARY_PATH}"
+ENV     LD_LIBRARY_PATH="/${TS_DIR}:${LD_LIBRARY_PATH}"
 ENV     LANG="en_US.UTF-8"
 
-WORKDIR /teamspeak3-server_linux_amd64
-
-ENTRYPOINT  ["./ts3server", "inifile=ts3server.ini", "license_accepted=1"]
+ENTRYPOINT  /${TS_DIR}/ts3server inifile=ts3server.ini license_accepted=1
