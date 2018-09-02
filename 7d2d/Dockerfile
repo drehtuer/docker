@@ -12,7 +12,7 @@ ENV     SDTD_BOOTSTRAP_URL="http://illy.bz/fi/7dtd/bootstrap.sh" \
         SDTD_GRP="sdtd"
 
 # Fixes apt-get warnings
-ARG DEBIAN_FRONTEND=noninteractive
+ARG     DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
 RUN     dpkg --add-architecture i386 \
