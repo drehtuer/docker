@@ -5,11 +5,11 @@ LABEL   name="teamspeak" \
         version="1.0" \
         maintainer="drehtuer@drehtuer.de"
 
-ENV     TS_VERSION="3.3.1" \
-        TS_DIR="teamspeak3-server_linux_amd64"  \
-        TS_FILE="${TS_DIR}-${TS_VERSION}.tar.bz2" \
-        TS_URL="http://dl.4players.de/ts/releases/${TS_VERSION}/${TS_FILE}" \
-        TS_USER="teamspeak"
+ENV     TS_VERSION="3.3.1"
+ENV     TS_DIR="teamspeak3-server_linux_amd64"
+ENV     TS_FILE="${TS_DIR}-${TS_VERSION}.tar.bz2"
+ENV     TS_URL="http://dl.4players.de/ts/releases/${TS_VERSION}/${TS_FILE}"
+ENV     TS_USER="teamspeak"
    
 RUN     apt-get update \
         && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -37,8 +37,8 @@ VOLUME  /${TS_DIR}/ts3server.ini \
 
 USER    teamspeak
 
-ENV     LD_LIBRARY_PATH="/teamspeak3-server_linux_amd64:${LD_LIBRARY_PATH}" \
-        LANG="en_US.UTF-8"
+ENV     LD_LIBRARY_PATH="/teamspeak3-server_linux_amd64:${LD_LIBRARY_PATH}"
+ENV     LANG="en_US.UTF-8"
 
 WORKDIR /teamspeak3-server_linux_amd64
 
