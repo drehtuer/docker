@@ -17,6 +17,7 @@ RUN     apt-get update \
             tar \
             wget \
             locales \
+            libmariadb2 \
         && rm -rf /var/lib/apt/lists/* \
         && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
         && dpkg-reconfigure --frontend=noninteractive locales \
@@ -38,7 +39,8 @@ VOLUME  /${TS_DIR}/ts3server.ini \
 USER    teamspeak
 
 ENV     LANG="en_US.UTF-8"
+ENV     LD_LIBRARY_PATH="/${TS_DIR}:${LD_LIBRARY_PATH}"
 
 WORKDIR /${TS_DIR}
 
-ENTRYPOINT  LD_LIBRARY_PATH=".:${LD_LIBRARY_PATH}" ./ts3server inifile=ts3server.ini license_accepted=1
+ENTRYPOINT  ./ts3server inifile=ts3server.ini license_accepted=1
