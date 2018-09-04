@@ -44,7 +44,7 @@ VOLUME  ${DST_STORAGE}/${DST_CLUSTER}/${DST_SHARD}
 
 WORKDIR ${DST_DIR}
 
-COPY    startDST.sh
+COPY    startDST.sh ${DST_DIR}
 
 USER    ${DST_USR}
 
