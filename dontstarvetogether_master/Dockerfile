@@ -1,14 +1,13 @@
 FROM    debian:stable-slim
 
-LABEL   name="dontstarvetogether" \
-        description="Dedicated Don't starve together server" \
+LABEL   name="dontstarvetogether_main" \
+        description="Dedicated Don't starve together server main" \
         version="1.0" \
         maintainer="drehtuer@drehtuer.net"
 
 ENV     STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
         STEAMCMD_DIR="/home/steam" \
         DST_DIR="/home/dst" \
-        DST_LOG="/var/log/dst.log" \
         DST_USR="dst" \
         DST_GRP="dst" \
         DST_STORAGE="home/storage" \
@@ -21,7 +20,7 @@ ARG     DEBIAN_FRONTEND=noninteractive
 # Install dependencies
 RUN     dpkg --add-architecture i386 \
         && apt-get update \
-	    && DEBIAN_FRONTENDapt-get install -y \
+	    && apt-get install -y \
             curl \
             lib32stdc++6 \
             lib32gcc1 \
@@ -30,8 +29,6 @@ RUN     dpkg --add-architecture i386 \
         && rm -rf /var/lib/apt/lists/* \
         && addgroup --gid 999 ${DST_GRP} \
         && adduser --disabled-login --disabled-password --gecos "dst,,," --uid 999 --gid 999 ${DST_USR} \
-        && touch ${DST_LOG} \
-        && chown ${DST_USR}:${DST_GRP} ${DST_LOG} \
         && mkdir -p ${STEAMCMD_DIR} \
         && cd ${STEAMCMD_DIR} \
         && curl -sqL ${STEAMCMD_URL} | tar zxf - \
