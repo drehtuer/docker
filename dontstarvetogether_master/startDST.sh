@@ -1,12 +1,12 @@
 #!/bin/bash
 
-DST_BIN="${DST_DIR}/server_dst/bin/dontstarve_dedicated_server_nullrenderer"
+DST_BIN="dontstarve_dedicated_server_nullrenderer"
 DST_PID=""
 DST_LOG=${DST_STORAGE}/${DST_CLUSTER}/${DST_SHARD}/server_log.txt
 
 function download {
     echo "steamcmd update" >> ${DST_LOG}
-    ${STEAMCMD_DIR}/steamcmd.sh +login anonymous +force_install_dir ${DST_DIR} +app_update 343050 validate +quit 1 1>>${DST_LOG} 2>&1
+    ${STEAMCMD_DIR}/steamcmd.sh +login anonymous +force_install_dir ${DST_DIR} +app_update 343050 validate +quit 1>>${DST_LOG} 2>&1
 }
 
 function update {
@@ -20,7 +20,9 @@ function update {
 
 function start {
     echo "Starting server" >> ${DST_LOG}
-    ${DST_BIN} -console -cluster ${DST_CLUSTER} -shard ${DST_SHARD} -persistent_storage_root ${DST_STORAGE} &
+    cd bin
+    ${DST_BIN} -cluster ${DST_CLUSTER} -shard ${DST_SHARD} -persistent_storage_root ${DST_STORAGE} 1>>${DST_LOG} 2>&1 &
+    cd ..
     DST_PID="$!"
 }
 
