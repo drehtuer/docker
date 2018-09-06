@@ -37,8 +37,6 @@ RUN     dpkg --add-architecture i386 \
 
 EXPOSE  10999/udp
 
-VOLUME  ${DST_STORAGE}/${DST_CLUSTER}/${DST_SHARD}
-
 WORKDIR ${DST_DIR}
 
 COPY    startDST.sh ${DST_DIR}
