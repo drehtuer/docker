@@ -10,7 +10,7 @@ ENV     STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_
         DST_DIR="/home/dst" \
         DST_USR="dst" \
         DST_GRP="dst" \
-        DST_STORAGE="home/storage" \
+        DST_STORAGE="/home/storage" \
         DST_CLUSTER="drehtuer.net" \
         DST_SHARD="Master"
 
@@ -35,7 +35,7 @@ RUN     dpkg --add-architecture i386 \
         && chown -R ${DST_USR}:${DST_GRP} ${STEAMCMD_DIR} \
         && echo "0 6 * * * ${DST_USR} ${DST_DIR}/startDST.sh update" > /etc/cron.d/dst
 
-EXPOSE  10999/tcp
+EXPOSE  10999/udp
 
 VOLUME  ${DST_STORAGE}/${DST_CLUSTER}/${DST_SHARD}
 
