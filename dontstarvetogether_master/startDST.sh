@@ -2,7 +2,7 @@
 
 DST_BIN="dontstarve_dedicated_server_nullrenderer"
 DST_PID=""
-DST_LOG=${DST_STORAGE}/${DST_CLUSTER}/${DST_SHARD}/server_log.txt
+DST_LOG="${DST_STORAGE}/server_log.txt"
 
 function download {
     echo "steamcmd update" >> ${DST_LOG}
@@ -26,10 +26,10 @@ function start {
     DST_PID="$!"
 }
 
+touch ${DST_LOG}
 if [[ "$#" == "1" && "$1" == "update" ]]; then
     update
 else
-    touch ${DST_LOG}
     [ ! -f ${DST_BIN} ] && download
     [ "$?" == "0" ]     && start
     tail -f ${DST_LOG}
