@@ -2,7 +2,7 @@
 
 DST_BIN="dontstarve_dedicated_server_nullrenderer"
 DST_PID=""
-DST_LOG="${DST_STORAGE}/server_log.txt"
+DST_LOG="${DST_STORAGE}/DoNotStarveTogether/${DST_CLUSTER}/${DST_SHARD}/server_log.txt"
 
 function download {
     echo "steamcmd update" >> ${DST_LOG}
@@ -21,7 +21,7 @@ function update {
 function start {
     echo "Starting server" >> ${DST_LOG}
     cd bin
-    ./${DST_BIN} -cluster ${DST_CLUSTER} -shard ${DST_SHARD} -persistent_storage_root ${DST_STORAGE} 1>>${DST_LOG} 2>&1 &
+    ./${DST_BIN} -cluster ${DST_CLUSTER} -shard ${DST_SHARD} -persistent_storage_root ${DST_STORAGE} &
     cd ..
     DST_PID="$!"
 }
