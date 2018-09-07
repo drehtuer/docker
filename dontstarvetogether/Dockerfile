@@ -22,8 +22,9 @@ ARG     DEBIAN_FRONTEND=noninteractive
 # Install dependencies
 RUN     dpkg --add-architecture i386 \
         && apt-get update \
-	    && apt-get install -y --no-install-recommends \
+	    && apt-get install -y \
             curl \
+            tar \
             lib32stdc++6 \
             lib32gcc1 \
             libcurl4-gnutls-dev:i386 \
