@@ -1,7 +1,7 @@
 FROM    debian:stable-slim
 
-LABEL   name="dontstarvetogether_main" \
-        description="Dedicated Don't starve together server main" \
+LABEL   name="dontstarvetogether" \
+        description="Dedicated Don't starve together server" \
         version="1.0" \
         maintainer="drehtuer@drehtuer.net"
 
@@ -10,9 +10,11 @@ ENV     STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_
         DST_DIR="/home/dst" \
         DST_USR="dst" \
         DST_GRP="dst" \
-        DST_STORAGE="/home/storage" \
-        DST_CLUSTER="drehtuer.net" \
-        DST_SHARD="Master"
+        DST_STORAGE="/home/storage"
+
+# override for server cluster/shard settings
+ENV     DST_CLUSTER="MyServer" \
+        DST_SHARD="Master" 
 
 # Fixes apt-get warnings
 ARG     DEBIAN_FRONTEND=noninteractive
@@ -20,7 +22,7 @@ ARG     DEBIAN_FRONTEND=noninteractive
 # Install dependencies
 RUN     dpkg --add-architecture i386 \
         && apt-get update \
-	    && apt-get install -y \
+	    && apt-get install -y --no-install-recommends \
             curl \
             lib32stdc++6 \
             lib32gcc1 \
@@ -36,6 +38,8 @@ RUN     dpkg --add-architecture i386 \
         && echo "0 6 * * * ${DST_USR} ${DST_DIR}/startDST.sh update" > /etc/cron.d/dst
 
 EXPOSE  10999/udp
+
+#VOLUME  ${DST_STORAGE}
 
 WORKDIR ${DST_DIR}
 
