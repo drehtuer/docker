@@ -21,12 +21,13 @@ function update {
 function start {
     echo "Starting server" >> ${DST_LOG}
     cd bin
-    ${DST_BIN} -cluster ${DST_CLUSTER} -shard ${DST_SHARD} -persistent_storage_root ${DST_STORAGE} 1>>${DST_LOG} 2>&1 &
+    ./${DST_BIN} -cluster ${DST_CLUSTER} -shard ${DST_SHARD} -persistent_storage_root ${DST_STORAGE} 1>>${DST_LOG} 2>&1 &
     cd ..
     DST_PID="$!"
 }
 
-touch ${DST_LOG}
+mkdir -p $(dirname "${DST_LOG}")
+touch "${DST_LOG}"
 if [[ "$#" == "1" && "$1" == "update" ]]; then
     update
 else
