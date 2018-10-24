@@ -5,7 +5,7 @@ LABEL   name="teamspeak" \
         version="1.0" \
         maintainer="drehtuer@drehtuer.de"
 
-ENV     TS_VERSION="3.3.1"
+ENV     TS_VERSION="3.4.0"
 ENV     TS_DIR="teamspeak3-server_linux_amd64"
 ENV     TS_FILE="${TS_DIR}-${TS_VERSION}.tar.bz2"
 ENV     TS_URL="http://dl.4players.de/ts/releases/${TS_VERSION}/${TS_FILE}"
