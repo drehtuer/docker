@@ -24,7 +24,6 @@ RUN     apt-get update \
         && wget -q -O /${TS_FILE} "${TS_URL}" \
         && tar -xjf /${TS_FILE} \
         && rm ${TS_FILE} \
-        && mv ${TS_DIR}/redist/libmariadb.so.2 ${TS_DIR}/ \
         && adduser --no-create-home --shell /usr/sbin/nologin --disabled-password --disabled-login --gecos "TeamSpeak,,," --uid 999 ${TS_USER} \
         && chown -R ${TS_USER} /${TS_DIR}
 
