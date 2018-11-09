@@ -1,24 +1,24 @@
-FROM    debian:stable-slim
+FROM    	debian:stable-slim
 
-LABEL   name="dovecot" \
-        descript="IMAP mailserver" \
-        version="1.0" \
-        maintainer="drehtuer@drehtuer.net"
+LABEL   	name="dovecot" \
+        	descript="IMAP mailserver with SOLR, Spamassassin retrain" \
+        	version="1.0" \
+        	maintainer="drehtuer@drehtuer.net"
 
-RUN     apt-get update \
-        && apt-get install -y \
-            dovecot-core \
-            dovecot-imapd \
-            dovecot-mysql \
-            dovecot-antispam \
-            dovecot-sieve \
-            dovecot-managesieved \
-            dovecot-lmtpd \
-            dovecot-solr \
-        && rm -Rf /var/lib/apt/list/*
+ARG			DEBIAN_FRONTEND=noninteractive
 
-EXPOSE  993/tcp
+RUN     	apt-get update \
+        	&& apt-get install -y \
+        	    dovecot-core \
+        	    dovecot-imapd \
+        	    dovecot-sieve \
+        	    dovecot-lmtpd \
+        	    dovecot-solr \
+				spamdc \
+        	&& rm -Rf /var/lib/apt/list/*
 
-VOLUME  /etc/dovecot
+EXPOSE  	993/tcp
 
-ENTRYPOINT ["/usr/sbin/dovecot", "-F"]
+ADD 		start.sh /
+
+ENTRYPOINT	/start.sh

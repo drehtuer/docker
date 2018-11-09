@@ -1,20 +1,26 @@
-FROM    debian:stable-slim
+FROM    	debian:stable-slim
 
-LABEL   name="postfix" \
-        descript="Postfix SMTP server with SPF, greylisting" \
-        version="1.0" \
-        maintainer="drehtuer@drehtuer.net"
+LABEL   	name="postfix" \
+        	descript="Postfix SMTP server with TLS, DKIM, SPF, DMARC, greylisting" \
+        	version="1.0" \
+        	maintainer="drehtuer@drehtuer.net"
 
-RUN     apt-get update \
-        && apt-get install -y \
-            postfix \
-            postfix-policyd-spf-python \
-            postfix-mysql \
-        && rm -Rf /var/lib/apt/list/*
+ARG 		DEBIAN_FRONTEND=noninteractive
 
-EXPOSE  25/tcp \
-        587/tcp
+RUN     	apt-get update \
+        	&& apt-get install -y \
+        	    postfix \
+        	    postfix-mysql \
+        	    postfix-policyd-spf-python \
+				postgrey \
+				opendkim \
+				opendkim-tools \
+				opendmarc \
+        	&& rm -Rf /var/lib/apt/list/*
 
-VOLUME  /etc/postfix
+EXPOSE  	25/tcp \
+        	587/tcp
 
-ENTRYPOINT  ["top"]
+ADD 		start.sh /
+
+ENTRYPOINT  /start.sh
