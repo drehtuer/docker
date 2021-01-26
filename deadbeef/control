@@ -1,0 +1,9 @@
+Package: deadbeef
+Maintainer: drehtuer@drehtuer.de
+Depends: libc6, libfaad2, libasound2, libimlib2, libbrotli1, libgtk-3-0, libmpg123-0, libmad0, libpulse0, libsndfile1
+Recommends: libfaad2, libflac8, libogg0, libcdio-cdda2, libgtk2.0-0, libdbus-1-3, libjansson4, libsqlite3-0, libfftw3-3, libffms2-4,  libsamplerate0, libsnappy1v5, libopus0, libopusfile0, libvorbis0a, libwavpack1, libspeex1, libcurl4, libzip5, libopencl-1.1-1, libxml2
+Section: sound
+Priority: optional
+Homepage: http://deadbeef.sourceforge.net/
+Description: The Ultimate Music Player
+ DeaDBeeF (as in 0xDEADBEEF) is a cross-platform audio player

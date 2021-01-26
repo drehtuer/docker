@@ -1,0 +1,14 @@
+Package: crelay
+Maintainer: drehtuer@drehtuer.de
+Depends: libusb-1.0-0, libftdi1, libhidapi-libusb0
+Recommends: 
+Section: utils
+Priority: optional
+Homepage: https://github.com/ondrej1024/crelay
+Description: Controlling different relay cards for home automation with a Linux software
+ Supported relay cards:
+   * Conrad USB 4-channel relay card
+   * Sainsmart USB 4/8-channel relay card
+   * HID API compatible relay cards (1/2/4/8 channel)
+   * Sainsmart USB 16-channel relay control module
+   * Generic GPIO controlled relays
